@@ -7,7 +7,52 @@ ROM: 48KB Flash
 RAM: 2KB
 [From reference 2](../README.md#References)
 
+Memory map:
+````
+0x0000 +--------------------------------------+
+       |                                      |
+       |           Interrupt vector           |
+       |                                      |
+0x0050 +--------------------------------------+
+       |                                      |
+       |                                      |
+       |                                      |
+       |              On-Chip ROM             |
+       |               (48Kbytes)             |
+       |                                      |
+       |                                      |
+       |                                      |
+       |                                      |
+       |                                      |
+       |                                      |
+       |                                      |
+       |                                      |
+       |                                      |
+0xbfff +--------------------------------------+
+       |                Unused                |
+0xf020 +--------------------------------------+
+       |         Internal IO registers        |
+       |                                      |
+0xf100 +--------------------------------------+
+       |                Unused                |
+0xf780 +--------------------------------------+
+       |                                      |
+       |                                      |
+       |             On-Chip RAM              |
+       |              (2Kbytes)               |
+       |                                      |
+       |                                      |
+       |                                      |
+       |                                      |
+0xff80 +--------------------------------------+
+       |         Internal IO registers        |
+       |                                      |
+0xffff +--------------------------------------+
+````
+
+
 ## IO
+
 
 ### Test Pads
 Seems to have an SPI interface, with the standard pinout.
