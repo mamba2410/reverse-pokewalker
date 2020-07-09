@@ -8,6 +8,10 @@ The end goal is to hopefully be able to have the foundations to emulate its beha
 - Custom hardware that emulates the pokewalker with extra features. (Raspberry Pi/Arduino app?)
 
 Documentation/findings can be found in the `docs` folder of this repo.
+Dumps can be found in the `dumps` directory.
+They are then separated into binary files and ascii hex files.
+
+Currently, the 'main' ROM is `sentret-screen-off-5ms-1`.
 
 ----
 
@@ -33,6 +37,7 @@ See `ROM-Dump.md` for more info.
 
 ### Renesas Documentation
 1. [H8/300H Series Programming Manual](https://cdn.hackaday.io/files/12686542757824/PrgMnl.pdf)
+2. [H8/300H Series Software Manual](https://www.renesas.com/us/en/doc/products/mpumcu/001/rej09b0213_h8300h.pdf)
 2. [Official H8 Series Programming Manual](https://www.renesas.com/cn/en/doc/products/mpumcu/001/e602025_h8300.pdf)
 3. [Datasheet for the chipset](https://pdf1.alldatasheet.com/datasheet-pdf/view/249752/RENESAS/H838600R.html)
 4. [E8a Emulator manual](https://www.renesas.com/br/ja/doc/products/tool/doc/001/r20ut0637ej0300_h8300h_slp.pdf)

@@ -13,13 +13,19 @@ For wiring to the pokewalker board:
 ![Pokewalker wiring.](../pics/sideb-wires-03-annotated.jpg)
 
 For breakout on the arduino:
-![Arduino breakout.](../pics/arduino-breakout-01.jpg)
+![Arduino breakout.](../pics/arduino-breakout-01-annotated.jpg)
 
-ROM is 48K and is addressable from `0x0050` to `0xbfff` as per the [manual](../README.md#Renesas_Documentation).
+ROM is 48K and is addressable from `0x0050` to `0xbfff` as per the [manual](../README.md#renesas-documentation).
 This is the maximum capacity of the ROM as per the datasheet.
 
 
 ## Info on the ROM
+
+Thanks to `u/WarrantyVoider`: 
+This dump does not appear to contain any code, but does contain a lot of images that are used on the pokewalker.
+The question then is: Where is the code stored if it's not in the MCU ROM?
+Or was this even read from the right place? Do the test pads lead to another ROM somewhere else on the board?
+
 I have no idea what's going on with the ROM to be honest.
 I have never done any kind of diassembling for unknown architectures before or extracting ROMs from MCUs.
 
@@ -30,6 +36,8 @@ This makes me think that all the writing on the pokewalker is as pictures or a c
 There are also sections of the ROM that contain a few (\~50) bytes of data then are separated by zeroes and seem to be aligned to some offset.
 I will have to look more at this and see what these are.
 My suspicion is that they are images used by the pokewalker in menus etc.
+
+
 
 
 ## Objdump tools
@@ -44,3 +52,4 @@ For converting between I used
 xxd -r -p $file_name.txt $file_name.bin
 ```
 to turn the hex ascii file into a raw binary file.
+There is a script `to-bin.sh` that converts all `.txt` files into `.bin` files in the `dumps/` directory. 
