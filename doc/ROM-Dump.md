@@ -1,13 +1,11 @@
 # Info on the ROM dump
 
 ## Dumping
-Dumped with an arduino nano to the serial monitor in the arduino editor, then copy-pasted from there to a text file `furret-main-screen-*.txt`.
-Done twice and compared to see if it was read properly.
-
+64K ROM dumped with an arduino nano and wires soldered to the test pads.
+Arduino reads the data then echoes it back through serial monitor.
 Code has been modified from the arduino sketch at [andre-richter/arduino-spi-dump-eeprom](https://github.com/andre-richter/arduino-spi-dump-eeprom).
 
-I initially had trouble with getting data, but with the right delay in the read code, it somehow worked.
-There is definitely bad soldering to do with this as well.
+There was trouble initially getting it working but adding a delay of 5ms between each read seems to work fine and get consistent reads.
 
 For wiring to the pokewalker board:
 ![Pokewalker wiring.](../pics/sideb-wires-03-annotated.jpg)
@@ -15,41 +13,43 @@ For wiring to the pokewalker board:
 For breakout on the arduino:
 ![Arduino breakout.](../pics/arduino-breakout-01-annotated.jpg)
 
-ROM is 48K and is addressable from `0x0050` to `0xbfff` as per the [manual](../README.md#renesas-documentation).
-This is the maximum capacity of the ROM as per the datasheet.
+There are two ROMS.
+The ROM that has a dump is the external 64K ROM which contains the graphics data.
+The internal 48K ROM will be harder to dump.
 
+## Info on the ROMs
 
-## Info on the ROM
+Thanks to `u/WarrantyVoider` for all the help on this.
+The 64k dump does not contain any code, but rather all of the image data on the walker.
 
-Thanks to `u/WarrantyVoider`: 
-This dump does not appear to contain any code, but does contain a lot of images that are used on the pokewalker.
-The question then is: Where is the code stored if it's not in the MCU ROM?
-Or was this even read from the right place? Do the test pads lead to another ROM somewhere else on the board?
+The images are stored as 1-bit greyscale images, each 8 pixels wide.
+The images are then presumably overlapped to give the 3-colour and 1-alpha channel images as seen on the walker.
+This process is likely similar to the way that character sprites are rendered in the original gen 1 games.
 
-I have no idea what's going on with the ROM to be honest.
-I have never done any kind of diassembling for unknown architectures before or extracting ROMs from MCUs.
+Some interesting notes:
+All of the menu titles and icons are stored as images, not text overlayed onto backgrounds.
+As seen in the `dumps/img/` directory (`-w16.png`), the images contain writing as pictures.
+The player name is also stored as an image as well (`Callum` here).
+This would mean that the game cart probably generates this image and then sends it over to the walker when first registered.
 
-What got me excited about this was that the string `nintendo` came up as the first few bytes of the ROM.
-There are no other readable strings in the binary.
-
-This makes me think that all the writing on the pokewalker is as pictures or a custom encoding (ie not ascii-8bit).
-There are also sections of the ROM that contain a few (\~50) bytes of data then are separated by zeroes and seem to be aligned to some offset.
-I will have to look more at this and see what these are.
-My suspicion is that they are images used by the pokewalker in menus etc.
-
-
+The first 8 bytes on the 64K ROM is the string `nintendo`.
+This is what initially told me that the ROM dump had worked.
 
 
 ## Objdump tools
-On ubuntu, the package I used to disassemble was `binutils-h8300-hms`.
-Then to get the assembly, I used
+For converting between hex and binary: 
+```
+xxd -r -p $file_name.txt $file_name.bin
+```
+There is a script `to-bin.sh` that converts all `.txt` files into `.bin` files in the `dumps/` directory.
+
+For generating the images, there is a python file to do that.
+Feel free to modify and play with widths/bit patterns etc.
+
+On Ubuntu, the package that can be used to diassemble and gain strings is `binutils-h8300-hms`.
+To get an assembly output, use
 ```
 h8300-hms-objdump -m h8300 -b binary -D $file_name.bin > $file_name.S
 ```
 
-For converting between I used 
-```
-xxd -r -p $file_name.txt $file_name.bin
-```
-to turn the hex ascii file into a raw binary file.
-There is a script `to-bin.sh` that converts all `.txt` files into `.bin` files in the `dumps/` directory. 
+

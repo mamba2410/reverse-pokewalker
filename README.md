@@ -7,23 +7,25 @@ The end goal is to hopefully be able to have the foundations to emulate its beha
 - A full emulator to run the pokewalker software on.
 - Custom hardware that emulates the pokewalker with extra features. (Raspberry Pi/Arduino app?)
 
-Documentation/findings can be found in the `docs` folder of this repo.
-Dumps can be found in the `dumps` directory.
-They are then separated into binary files and ascii hex files.
+Documentation/findings can be found in the `docs/` directory of this repo.
+Dumps can be found in the `dumps/` directory.
+The dumps can be read as a binary file (.bin), a hex file (.txt) or as an image (.png).
+The images look best at the 16-pixel width.
 
-Currently, the 'main' ROM is `sentret-screen-off-5ms-1`.
+Currently, the 'main' ROM is `64k-full-rom.txt`.
 
 ----
 
 ## What's Known
-Curently have a ROM dump.
-The dump contains no code but does contain images used by the 'walker.
-I don't know where the code is stored.
+- The main MCU is a Renesas H8/38606F chip with 48K flash ROM and 2K RAM.
+- The code is stored in the internal 48K MCU flash.
+- The images are stored on the external 64K eeprom.
+- Most text is stored as an image file on 64k ROM, except dynamic data like response text.
+- Most images are stored as two 1-bit images, which are then presumably overlayed to give a 3-tone image. Probably a similar system to the gen 1 character sprites.
 
-The main MCU is a Renesas H8/38606F chip with 48K flash ROM and 2K RAM.
-Either I have read the wrong EEPROM or there is a separate EEPROM somewhere else with the boot code in it. 
 
-See `ROM-Dump.md` for more info.
+
+See `docs/` for more info.
 
 ## To Be Done
 - Analyse ROM dump
@@ -39,6 +41,7 @@ See `ROM-Dump.md` for more info.
 ### Other Discussion on the topic
 1. [GBA Temp forum post](https://gbatemp.net/threads/pokewalker-hacking.419462/)
 2. [Japanese article on the hardware](http://nds.jpn.org/pokegs/pokew.html)
+3. [Another japanese article giving info on the external eeprom](https://wandoli.blogspot.com/2013/01/blog-post.html)
 
 ### Renesas/Hardware Documentation
 1. [H8/38602R Group Hardware Manual](https://pdf1.alldatasheet.com/datasheet-pdf/view/249752/RENESAS/H838600R.html)
@@ -47,6 +50,7 @@ See `ROM-Dump.md` for more info.
 4. [H8/300H Series Software Manual](https://www.renesas.com/us/en/doc/products/mpumcu/001/rej09b0213_h8300h.pdf)
 5. [Official H8 Series Programming Manual](https://www.renesas.com/cn/en/doc/products/mpumcu/001/e602025_h8300.pdf)
 6. [E8a Emulator manual](https://www.renesas.com/br/ja/doc/products/tool/doc/001/r20ut0637ej0300_h8300h_slp.pdf)
+7. [M95512RP Flash datasheet](https://pdf1.alldatasheet.com/datasheet-pdf/view/245987/STMICROELECTRONICS/M95512RMN3P.html)
 
 
 ### Tools/software (Need a Renesas account to download)

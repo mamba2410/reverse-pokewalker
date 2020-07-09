@@ -1,11 +1,13 @@
 # Information on the Board/Hardware
 
 ## SoC
-Processor: Renesas H8/38606R
-Architecture: 16-bit
-ROM: 48KB Flash
+- Processor: Renesas H8/38606R
+- Architecture: 16-bit
+- ROMs:
+       - 48KB flash (on the MCU)
+       - 64KB external flash (M95512RP).
 RAM: 2KB
-[From reference 2](../README.md#References)
+[From reference 2](../README.md#references)
 
 Memory map:
 ````
@@ -53,20 +55,23 @@ Memory map:
 
 ## IO
 
-
 ### Test Pads
-Seems to have an SPI interface, with the standard pinout.
-One thing to note is that the EEPROM and LCD can be selected from here.
-The chip select is probably active low as they are all labelled `CSB`.
+SPI Interface: `SCK`, `MOSI`, `MISO`
+       - `LCD-CSB` - Access to the LCD display
+       - `EEP-CSB` - Access to the 64K EEPROM
+Serial interface: `TX`, `RX`
+Presumably echoes the IR data.
 
-+3.3V can be hooked up to the `BAT+` pad and 0V can be hooked up to the `GND` to power it.
-Seems to run fine off of an arduino nano +5v connector.
+`BAT+` and `GND`.
++3.3V can be hooked up to the `BAT+` pad.
++5V can also be connected but this isn't recommended.
+Nominal voltage is +3.3V from the CR2032 battery.
 
-There also appears to be a serial port, pads labelled `TXD` and `RXD`
+Misc pads:
+- `NMI` - Non-maskable interrupt
+- `E7-0`, `E7-1`, `E7-2` - Emulator pins for the E7 processor emulator. Access to the internal ROM?
 
 Unknown pads:
-- `NMI` - Non-maskable interrupt?
-- `E7-0`, `E7-1`, `E7-2` - Emulator pins?
 - `LCD-DC`
 - `RES2B` - active low reset?
 - `VCI`
