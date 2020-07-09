@@ -12,7 +12,8 @@ Dumps can be found in the `dumps/` directory.
 The dumps can be read as a binary file (.bin), a hex file (.txt) or as an image (.png).
 The images look best at the 16-pixel width.
 
-Currently, the 'main' ROM is `64k-full-rom.txt`.
+The hex for the 64K ROM is in `dumps/hex/64k-full-rom.txt`.
+Corresponding binary file in `dumps/bin/` and image file in `dumps/img/`.
 
 ----
 
@@ -23,16 +24,18 @@ Currently, the 'main' ROM is `64k-full-rom.txt`.
 - Most text is stored as an image file on 64k ROM, except dynamic data like response text.
 - Most images are stored as two 1-bit images, which are then presumably overlayed to give a 3-tone image. Probably a similar system to the gen 1 character sprites.
 
-
-
 See `docs/` for more info.
 
-## To Be Done
-- Analyse ROM dump
+## Next steps/To be done
+- Get a ROM dump of the internal 48K ROM which contains all the code.
+	- Decapping and looking at the MCU under a microscope might be the best approach.
+	- Worth looking into the TX/RX signals, it's likely just echoing from the IR but it might be able to be exploited to run arbitrary code if intercepted.
+	- Research on chip/code exploits to get a dump might be another option. "power glitch attack" was the recommended googling to learn more (thanks to `u/DarkJezter`)
+	- It's a long shot, but might be able to intercept the tx/rx signal and somehow get the MCU to write the 48K ROM contents to the external EEPROM.
 - Decode IR signal
 	- Structure (See GBA Temp forum thread)
 	- Protocol
-- For fun: Custom software running on the pokewalker
+- Might be able to write code to the internal ROM somehow.
 
 ----
 
