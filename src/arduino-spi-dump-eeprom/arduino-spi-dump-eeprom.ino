@@ -7,10 +7,10 @@
 #define SPI_TRANSFER_BYTE 0xff
 
 
-
-const unsigned short int EEPROM_START_ADDRESS   = 0x0000;
-const unsigned short int EEPROM_END_ADDRESS     = 0xc000;
-const unsigned short int NUM_BYTES              = (EEPROM_END_ADDRESS - EEPROM_START_ADDRESS);
+/* ints are only 16-bit, so more than 64k bytes */
+const unsigned int EEPROM_START_ADDRESS   = 0x0000;
+const unsigned int EEPROM_END_ADDRESS     = 0xffff;
+const unsigned int NUM_BYTES              = (EEPROM_END_ADDRESS - EEPROM_START_ADDRESS);
 
 void setup() {
   Serial.begin(115200);
@@ -39,7 +39,9 @@ void read_eeprom() {
   Serial.print(c, HEX);
 */
 
-  for (addr = 0; addr < NUM_BYTES; addr++) {
+  addr = EEPROM_START_ADDRESS;
+  //for (addr = EEPROM_START_ADDRESS; addr <= EEPROM_END_ADDRESS; addr++) {
+  do {
     resp = SPI.transfer(SPI_TRANSFER_BYTE);
 
     /* Formatting */
@@ -52,7 +54,9 @@ void read_eeprom() {
 
     /* I got consistent results with a delay of 5ms*/
     delay(5);
-  }
+    addr++;
+    if (!addr) break;                   // Break if address is zero, signals integer overflow
+  } while( addr <= EEPROM_END_ADDRESS );
   
   /* End transmission */
   digitalWrite(CS_PIN, HIGH);
