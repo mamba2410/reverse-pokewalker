@@ -7,6 +7,8 @@ The end goal is to hopefully be able to have the foundations to emulate its beha
 - A full emulator to run the pokewalker software on.
 - Custom hardware that emulates the pokewalker with extra features. (Raspberry Pi/Arduino app?)
 
+Join the [Discord server](https://discord.gg/ymbTMsS) for more discussion on the topic.
+
 Documentation/findings can be found in the `docs/` directory of this repo.
 Dumps can be found in the `dumps/` directory.
 The dumps can be read as a binary file (.bin), a hex file (.txt) or as an image (.png).
