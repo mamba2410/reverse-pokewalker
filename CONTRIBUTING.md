@@ -5,7 +5,7 @@ Just shoot a pull request or something.
 I am not skilled enough to do this on my own, so all help is appreciated.
 
 
-If there's an interest in a Discord server, I can make one for discussions about the project.
+Join the [Discord server](https://discord.gg/ymbTMsS) for more discussions about the topic/repo.
 
 
 If you can, try and write something about what you did, how you did it etc.
