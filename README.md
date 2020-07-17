@@ -1,4 +1,6 @@
-# README
+# Pokewalker Reverse Engineering
+
+![PokeWalker](pics/logo.png)
 
 This project is about reverse engineering the pokewalker, a device designed for use with the Pokemon HeartGold and SoulSilver games.
 
@@ -63,3 +65,13 @@ See `docs/` for more info.
 2. [C/C++ Compiler for the H8 Series](https://www.renesas.com/us/en/products/software-tools/tools/compiler-assembler/compiler-package-for-h8sx-h8s-h8-family.html#downloads)
 3. [C/C++ Compiler user's manual](https://www.renesas.com/us/en/doc/products/tool/002/rej10j2039_r0c40008xsw07rum.pdf)
 4. [Stack Overflow question about a disassembler](https://reverseengineering.stackexchange.com/questions/1684/are-there-any-free-or-low-cost-disassemblers-for-the-renesas-h8-family-of-proces)
+5. [andre-richter/arduino-spi-dump-eeprom](https://github.com/andre-richter/arduino-spi-dump-eeprom)
+
+## Thanks and Acknowledgments
+Below is a list of people who have discussed, but not directly contributed to this repo.
+- `u/WarrantyVoider` for creating images of the 64K ROM dump and providing references to the exact external EEPROM used.
+- `u/DarkJezter` for suggesting ways to get code off of the MCU chip.
+- All the people on the GBATemp thread. They really helped getting this started. Especially `FroggestSpirit`.
+
+And of coruse thank you to everybody who has contributed!
+
