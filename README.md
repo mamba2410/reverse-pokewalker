@@ -75,3 +75,6 @@ Below is a list of people who have discussed, but not directly contributed to th
 
 And of coruse thank you to everybody who has contributed!
 
+## License
+
+Software, images and documentation are licensed under the MIT license.
