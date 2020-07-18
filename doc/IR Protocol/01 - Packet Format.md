@@ -10,13 +10,14 @@ Some packets might not even contain a payload (for instance, an acknowledgment p
 | 8 byte | ??? byte |
 
 ## Header description
-- Bytes 0 and 1 of the header is the Packet ID. It never changes between two sessions, and can be used to identify a packet and deduce its size for instance.  
-- Bytes 2 and 3 of the header is a Checksum, whose algorithm will be described below.  
-- Bytes 4 to 7 of the header is a Session ID. This will change between two sessions, but **never** changes in one session. It is calculated by XORing two values, which will be described in the next chapter.
+- Byte 0 of the header is the Packet ID. It never changes between two sessions, and can be used to identify a packet and deduce its size for instance.  
+- Byte 1 of the header is used by some packet as an argument/flags byte (usually, this byte is set to ``0x01`` for packets sent by Pokemon HGSS, and to ``0x02`` for packets sent by the PokeWalker).
+- Byte 2 and 3 of the header is a Checksum, whose algorithm will be described below.  
+- Byte 4 to 7 of the header is a Session ID. This will change between two sessions, but **never** changes in one session. It is calculated by XORing two values, which will be described in the next chapter.
 
-| Packet ID | Checksum | Session ID |
-|-----------|----------|------------|
-| 2 byte    | 2 byte   | 4 byte     |
+| Packet ID | Packet argument | Checksum | Session ID |
+|-----------|-----------------|----------|------------|
+| 1 byte    | 1 byte          | 2 byte   | 4 byte     |
 
 ## Computing the checksum
 The checksum is calculated using the whole packet, with the Checksum field in the header being zero'ed out.
