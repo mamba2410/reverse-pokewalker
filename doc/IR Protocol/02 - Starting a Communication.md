@@ -43,9 +43,29 @@ At this point, if Pokemon deems that the PokeWalker is invalid, it will terminat
 
 Learn more about this packet [here](Packets/0x22%20-%20General%20Data.md).
 
-## Pokemon side: Sending general data
-Pokemon sends its general data too, whose format looks to be the same as the one used in the PokeWalker general data packet.
+## Communication sequence diagram
+```
+PokeWalker                          Pokemon HGSS
+    |                                     |
+    |         Announcement Packet         |
+    | ----------------------------------> |
+    |                                     |
+    |      0xFA - Pokemon Session ID      |
+    | <---------------------------------- |
+    |                                     |
+    |    0xF8 - PokeWalker Session ID     |
+    | ----------------------------------> |
+    |                                     |
+    |   0x20 - Asking for General Data    |
+    | <---------------------------------- |
+    |                                     |
+    |   0x22 - PokeWalker General Data    |
+    | ----------------------------------> |
+    |                                     |
+    |               [...]                 |
+```
 
-Learn more about this packet [here](Packets/0x40%20-%20General%20Data.md).
-
-🠖 To be continued...
+🠖 Continue to [Chapter 03 - Register PokeWalker and Send a Pokemon procedure](03%20-%20Register%20PokeWalker%20and%20Send%20a%20Pokemon.md)  
+🠖 Fast-forward to [Chapter 04 - Send a Pokemon procedure](04%20-%20Send%20a%20Pokemon.md)  
+🠖 Fast-forward to [Chapter 05 - Receive a Pokemon procedure](05%20-%20Receive%20a%20Pokemon.md)  
+🠖 Fast-forward to [Chapter 06 - Receive a Gift procedure](06%20-%20Receive%20a%20Gift.md)  
