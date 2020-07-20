@@ -1,16 +1,18 @@
-# Packet 0x40 - General Data
+# Packet 0x32 - Pokemon General Data
 ## Overview
-- **Packet ID**: ``0x40``
+- **Packet ID**: ``0x32``
 - **Length**: 104 byte (112 with header)
 - **Sent by**: Pokemon HGSS
-- **Used in**: Every communication
+- **Used in**: Register PokeWalker and Send a Pokemon
 
-This packet looks a lot like [Packet 0x22 - General Data](0x22%20-%20General%20Data.md) sent by the PokeWalker.
+This packet looks a lot like [Packet 0x22 - PokeWalker General Data](0x22%20-%20PokeWalker%20General%20Data.md) sent by the PokeWalker.
 
 The most notable feature of this packet is located at offset ``0x68``, and is used by the PokeWalker to set its RTC.  
 It seems that if this field is zeroed out, the PokeWalker will not set the clock.
 
 ## Description
+The same description is used for packets [0x40](0x40%20-%20Pokemon%20General%20Data.md), [0x52](0x52%20-%20Pokemon%20General%20Data.md) and [0x60](0x60%20-%20Pokemon%20General%20Data.md).
+
 | Offset | Length | Description                           |
 |--------|--------|---------------------------------------|
 | 0x00   | 8      | Header                                |

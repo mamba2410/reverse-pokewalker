@@ -1,11 +1,11 @@
-# Packet 0x22 - General Data
+# Packet 0x22 - PokeWalker General Data
 ## Overview
 - **Packet ID**: ``0x22``
 - **Length**: 104 byte (112 with header)
 - **Sent by**: PokeWalker
 - **Used in**: Every communication
 
-This packet looks a lot like [Packet 0x40 - General Data](0x40%20-%20General%20Data.md) sent by Pokemon HGSS.
+This packet looks a lot like [Packet 0x32 - General Data](0x32%20-%20Pokemon%20General%20Data.md) (and [0x40](0x40%20-%20Pokemon%20General%20Data.md), [0x52](0x52%20-%20Pokemon%20General%20Data.md), [0x60](0x60%20-%20Pokemon%20General%20Data.md)) sent by Pokemon HGSS.
 
 It is part of every communication, and helps verify the PokeWalker against the current Pokemon HGSS player infos.
 
