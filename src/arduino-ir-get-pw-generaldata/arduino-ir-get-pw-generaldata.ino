@@ -34,6 +34,15 @@ void printHex(int n) {
   Serial.print(n, HEX);
 }
 
+void printBin(uint8_t n) {
+  char buf[8];
+  for (size_t i = 0; i < 8; i++)
+  {
+    buf[7-i] = ( n&(1<<i) ) ? '1':'0';
+  }
+  Serial.print(buf);
+}
+
 uint16_t computeChecksum(const uint8_t packet[], const size_t packetSize) {
     uint16_t checksum = 0x0002;
 
@@ -68,6 +77,17 @@ void sendPacket(uint8_t packet[], const size_t packetSize) {
 void setCommState(const CommState newState) {
   currentState = newState;
   rxCursor = 0;
+}
+
+void printPacket() {
+  Serial.print("----------------");
+  for (size_t i = 0; i <= rxCursor; i++)
+  {
+    if (!(i%8)) Serial.print('\n');
+    if(rxBuffer[i] < 0x10) Serial.print('0');
+    Serial.print(rxBuffer[i], HEX);
+  }
+  Serial.println("\n----------------");
 }
 
 void setup() {
@@ -111,7 +131,7 @@ void loop() {
         {
           if (rxBuffer[0] == 0xF8 && rxBuffer[1] == 0x02)
           {
-            pwKey = (rxBuffer[4] << 24) | (rxBuffer[5] << 16) | (rxBuffer[6] << 8) | rxBuffer[7];
+            pwKey = ((uint32_t)rxBuffer[4] << 24) | ((uint32_t)rxBuffer[5] << 16) | ((uint32_t)rxBuffer[6] << 8) | ((uint32_t)rxBuffer[7] << 0);
             
             Serial.println("Received PW key!");
             Serial.print("> ");
@@ -146,7 +166,7 @@ void loop() {
           Serial.print("SID: ");
           Serial.println(pwGeneralData.sid);
 
-          Serial.print("Trainer name (hex): ");
+          Serial.print("Trainer name (hex):   ");
           for (size_t i = 0; i < sizeof(pwGeneralData.trainerName); ++i)
           {
             printHex(pwGeneralData.trainerName[i]);
@@ -154,13 +174,16 @@ void loop() {
           }
           Serial.println();
 
-          Serial.print("Status: ");
+          Serial.print("Trainer name (ASCII): ");
+          for (size_t i = 0; pwGeneralData.trainerName[i] != 0xFF; i +=2)
+          {
+            Serial.print( (char)(pwGeneralData.trainerName[i]+0x1C) );
+          }
+          Serial.println();
 
-          if (pwGeneralData.pwStatus & 0x1)
-            Serial.print("REGISTERED ");
-
-          if (pwGeneralData.pwStatus & 0x2)
-            Serial.print("HAS_POKEMON ");
+          Serial.println("Status: ------PR");
+          Serial.print  ("        ");
+          printBin(pwGeneralData.pwStatus);
 
           Serial.println();
 
@@ -174,6 +197,8 @@ void loop() {
         
       default:
         Serial.println("Unknown comm state");
+        Serial.println("Packet received: ");
+        printPacket();
         setCommState(COMM_IDLE);
         
         break;
