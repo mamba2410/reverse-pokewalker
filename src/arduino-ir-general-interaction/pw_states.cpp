@@ -71,6 +71,29 @@ void funcCommGetGData() {
     PWGeneralData pwGeneralData;
     memcpy(&pwGeneralData, rxBuffer, sizeof(PWGeneralData));
     
+    printGeneralData(pwGeneralData);
+
+// please 2
+    Serial.print("\nunk1: ");
+    printBytes(pwGeneralData.unk1, 12);
+    Serial.print("\nunk2: ");
+    printBytes(pwGeneralData.unk2, 56);
+    Serial.println();
+    for (size_t i = 0; i < 56; i++)
+    {
+        Serial.print( (char)(pwGeneralData.unk2[i]+0x19) );
+    }
+    Serial.print("\nunk3: ");
+    printBytes(pwGeneralData.unk3, 3);
+    Serial.print("\nunk4: ");
+    printBytes(pwGeneralData.unk4, 8);
+    Serial.println();
+
+    setCommState(COMM_IDLE);
+  }
+}
+
+void printGeneralData(PWGeneralData pwGeneralData) {
     Serial.println();
     Serial.println("PokeWalker General data:");
 
@@ -98,14 +121,14 @@ void funcCommGetGData() {
     Serial.println("Status: ------PR");
     Serial.print  ("        ");
     printBin(pwGeneralData.pwStatus);
-
     Serial.println();
-
+/*
+    Serial.print("Seconds since 01/01/2001: ");
+    Serial.println((pwGeneralData.timeSince&0xFF) | (pwGeneralData.timeSince&0xFF00));
+*/
     Serial.print("Total step count: ");
     Serial.println(((pwGeneralData.totalStep >> 24) & 0xFF) | ((pwGeneralData.totalStep << 8) & 0xFF0000) | ((pwGeneralData.totalStep >> 8) & 0xFF00) | ((pwGeneralData.totalStep << 24) & 0xFF000000));
     
-    setCommState(COMM_IDLE);
-  }
 }
 
 /*

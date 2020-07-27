@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <stddef.h>
+#include "pokewalker.h"
 
 enum CommState {
   COMM_IDLE,
@@ -21,6 +22,7 @@ void funcCommGetGData(void);
 
 void setCommState(CommState);
 void sendPacket(uint8_t, const size_t);
+void printGeneralData(PWGeneralData);
 
 extern commFunc_t commFuncTable[];
 extern CommState currentState;

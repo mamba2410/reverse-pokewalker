@@ -78,10 +78,11 @@ void printHex(int n) {
  *  Print the number as an 8-bit binary number
  */
 void printBin(uint8_t n) {
-  char buf[8];
+  char buf[9];
   for (size_t i = 0; i < 8; i++)
   {
     buf[7-i] = ( n&(1<<i) ) ? '1':'0';
   }
+  buf[9] = 0;
   Serial.print(buf);
 }
