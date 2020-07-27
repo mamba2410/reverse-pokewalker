@@ -9,6 +9,9 @@ void printPacket(size_t);
 void printHex(int);
 void printBin(uint8_t);
 
+void parseUnicode(uint16_t*, uint8_t*, const size_t);
+void parseAscii(char*, uint8_t*, const size_t);
+
 uint16_t computeChecksum(const uint8_t packet[], const size_t packetSize);
 void sendPacket(uint8_t packet[], const size_t packetSize);
 

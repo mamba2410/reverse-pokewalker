@@ -83,6 +83,45 @@ void printBin(uint8_t n) {
   {
     buf[7-i] = ( n&(1<<i) ) ? '1':'0';
   }
-  buf[9] = 0;
+  buf[8] = 0;
   Serial.print(buf);
+}
+
+/*
+ *  Turns a byte array into a Unicode string
+ */
+void parseUnicode(uint16_t *buf, uint8_t *src, const size_t strlen) {
+  uint16_t c, u = 0xFFFF;
+  for (size_t i = 0; i < strlen; i++) {
+      c = ((uint16_t)src[2*i+1]<<8) | ((uint16_t)src[2*i]);
+
+      // TODO: Add full range of encodings
+      // TODO: Add goto/continue after each match
+      if (c == 0x0001)                u =     0x3000;
+      if (c >= 0x0002 && c <= 0x004E) u = c + 0x303F;
+      if (c == 0x004F)                u =     0x308F;
+      if (c == 0x0050 || c == 0x0051) u = c + 0x3041;
+      if (c >= 0x0052 && c <= 0x009E) u = c + 0x304F;
+      if (c == 0x009F)                u =     0x30EF;
+      if (c == 0x00A0 || c == 0x00A1) u = c + 0x3052;
+      if (c >= 0x00A2 && c <= 0x00AB) u = c + 0xFE6E;
+      if (c >= 0x00AC && c <= 0x00C5) u = c + 0xFE75;
+
+      if (c >= 0x0121 && c <= 0x012A) u = c - 0x00F1;
+      if (c >= 0x012B && c <= 0x0144) u = c - 0x00EA;
+      if (c >= 0x0145 && c <= 0x015E) u = c - 0x00E4;
+
+      if (c == 0xFFFF || c == 0x0000) u = 0x0000;
+
+      buf[i] = u;
+  }
+}
+
+/*
+ *  Turns a byte array into an ASCII string
+ */
+void parseAscii(char *buf, uint8_t  *src, const size_t strlen) {
+  uint16_t buf16[strlen];
+  parseUnicode(buf16, src, strlen);
+  for (size_t i = 0; i < strlen; i++) buf[i] = buf16[i]&0xFF;
 }
