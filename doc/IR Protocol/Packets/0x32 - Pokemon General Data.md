@@ -19,31 +19,10 @@ The same description is used for packets [0x40](0x40%20-%20Pokemon%20General%20D
 | 0x08   | 12     | _Needs documentation (Trainer data?)_ |
 | 0x14   | 2      | Trainer ID                            |
 | 0x16   | 2      | Secret ID                             |
-| 0x18   | 56     | _Unknown_                             |
+| 0x18   | 56     | Unknown (Always 0x00)                 |
 | 0x50   | 16     | Trainer Name (Terminated by 0xFFFF)   |
-| 0x60   | 3      | _Unknown_                             |
-| 0x63   | 1      | Status byte (See below)               |
-| 0x64   | 4      | _Unknown (Always zero?)_              |
-| 0x68   | 4      | _Number of seconds since 01/01/2001 (?)_    |
-| 0x6C   | 4      | Total number of steps                 |
+| 0x60   | 8      | Unknown (Always 0x00)                 |
+| 0x68   | 4      | Number of seconds since 01/01/2001    |
+| 0x6C   | 4      | Unknown (Always 0x00)                 |
 
 Values in italic needs more research.
-
-## Field details
-
-### Trainer name
-In HGSS, the trainer can have up to 7 ASCII characters in their name.
-The way the name is encoded here is not plain ASCII, probably to incorporate Japanese characters.
-
-Some notes:
-- The name is ended with `0xFFFF`, not `0x00`.
-- Lower case characters have had `0x1C` subtracted from their ascii counterparts.
-- Upper case characters have had `0x19` subtracted from their ascii counterparts.
-- Characters appear to be 2-bytes wide, the second byte being `0x01` for English characters.
-
-### Status byte
-| Bit | Description                           |
-|-----|---------------------------------------|
-| 0   | Set if the PW is registered to a game |
-| 1   | Set if the PW has a Pokemon           |
-| 2-7 | Unknown/unused                        |
