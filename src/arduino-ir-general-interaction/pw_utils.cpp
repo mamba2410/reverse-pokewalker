@@ -9,7 +9,8 @@ size_t rxCursor = 0;
  *  Will calculate checksum and xor
  */
 void sendPacket(uint8_t packet[], const size_t packetSize) {
-  const uint16_t checksum = computeChecksum(packet, packetSize);
+  //const uint16_t checksum = computeChecksum(packet, packetSize);  // I get a compiler error if I add `const` now
+  uint16_t checksum = computeChecksum(packet, packetSize);
   packet[0x02] = checksum >> 8;
   packet[0x03] = checksum & 0xFF;
 
@@ -87,6 +88,10 @@ void printBin(uint8_t n) {
   Serial.print(buf);
 }
 
+#define CMAPV(cv, uv)     if (c == cv) { u = uv; goto Loop_End; }
+#define CMAPP(c1, c2, av) if (c == c1 || c == c2) { u = c + av; goto Loop_End; }
+#define CMAPR(cl, ch, av) if (c >= cl && c <= ch) { u = c + av; goto Loop_End; }
+
 /*
  *  Turns a byte array into a Unicode string
  */
@@ -96,23 +101,67 @@ void parseUnicode(uint16_t *buf, uint8_t *src, const size_t strlen) {
       c = ((uint16_t)src[2*i+1]<<8) | ((uint16_t)src[2*i]);
 
       // TODO: Add full range of encodings
-      // TODO: Add goto/continue after each match
-      if (c == 0x0001)                u =     0x3000;
-      if (c >= 0x0002 && c <= 0x004E) u = c + 0x303F;
-      if (c == 0x004F)                u =     0x308F;
-      if (c == 0x0050 || c == 0x0051) u = c + 0x3041;
-      if (c >= 0x0052 && c <= 0x009E) u = c + 0x304F;
-      if (c == 0x009F)                u =     0x30EF;
-      if (c == 0x00A0 || c == 0x00A1) u = c + 0x3052;
-      if (c >= 0x00A2 && c <= 0x00AB) u = c + 0xFE6E;
-      if (c >= 0x00AC && c <= 0x00C5) u = c + 0xFE75;
-
-      if (c >= 0x0121 && c <= 0x012A) u = c - 0x00F1;
-      if (c >= 0x012B && c <= 0x0144) u = c - 0x00EA;
-      if (c >= 0x0145 && c <= 0x015E) u = c - 0x00E4;
+      CMAPV(0x0001, 0x3000);
+      CMAPR(0x0002, 0x004E, 0x303F);
+      CMAPV(0x004F, 0x308F);
+      CMAPP(0x0050, 0x0051, 0x3041);
+      CMAPR(0x0052, 0x009E, 0x304F);
+      CMAPV(0x009F, 0x30EF);
+      CMAPP(0x00A0, 0x00A1, 0x3052);
+      CMAPR(0x00A2, 0x00AB, 0xFE6E);
+      CMAPR(0x00AC, 0x00C5, 0xFE75);
+      CMAPR(0x00C6, 0x00DF, 0xFE7B);
+      CMAPV(0x00E1, 0xFF01);
+      CMAPV(0x00E2, 0xFF1F);
+      CMAPP(0x00E3, 0x00E4, 0x2F1E);
+      CMAPV(0x00E5, 0x22EF);
+      CMAPV(0x00E6, 0x30FB);
+      CMAPV(0x00E7, 0xFF0F);
+      CMAPR(0x00E8, 0x00EB, 0x2F24);
+      CMAPP(0x00EC, 0x00ED, 0xFE1C);
+      CMAPP(0x00EE, 0x00EF, 0x31AC);
+      CMAPV(0x00F0, 0xFF0B);
+      CMAPV(0x00F1, 0xFF0D);
+      CMAPP(0x00F2, 0x00F3, 0x21A5);
+      CMAPV(0x00F4, 0xFF1D);
+      CMAPV(0x00F5, 0xFF5A);
+      CMAPP(0x00F6, 0x00F7, 0xFE24);
+      CMAPV(0x00F8, 0xFF0E);
+      CMAPV(0x00F9, 0xFF0C);
+      CMAPV(0x00FA, 0x2664);
+      CMAPV(0x00FB, 0x2667);
+      CMAPP(0x00FC, 0x00FD, 0x2565);
+      CMAPV(0x00FE, 0x2606);
+      CMAPV(0x00FF, 0x25CE);
+      CMAPV(0x0100, 0x25CB);
+      CMAPV(0x0101, 0x25A1);
+      CMAPV(0x0102, 0x25B3);
+      CMAPV(0x0103, 0x25C7);
+      CMAPV(0x0104, 0xFF20);
+      CMAPV(0x0105, 0x266B);
+      CMAPV(0x0106, 0xFF05);
+      CMAPV(0x0107, 0x263C);
+      CMAPV(0x0108, 0x2614);
+      CMAPV(0x0109, 0x2630);
+      CMAPV(0x010A, 0x2744);
+      CMAPV(0x010B, 0x260B);
+      CMAPP(0x010C, 0x010D, 0x2548);
+      CMAPV(0x010E, 0x260A);
+      CMAPP(0x010F, 0x0110, 0x2655);
+      CMAPV(0x0111, 0x263E);
+      CMAPV(0x0112, 0x00A5);
+      CMAPR(0x0113, 0x011A, 0x2535);
+      CMAPR(0x011B, 0x011E, 0x2074);
+      CMAPV(0x011F, 0x2023);
+      CMAPV(0x0120, 0xFF06);
+      CMAPR(0x0121, 0x012A, -0x00F1);   // Note: Negative adds/offsets may be compiler dependent
+      CMAPR(0x012B, 0x0144, -0x00EA);
+      CMAPR(0x0145, 0x015E, -0x00E4);
+      CMAPR(0x015F, 0x019E, -0x009F);
 
       if (c == 0xFFFF || c == 0x0000) u = 0x0000;
 
+      Loop_End:
       buf[i] = u;
   }
 }
