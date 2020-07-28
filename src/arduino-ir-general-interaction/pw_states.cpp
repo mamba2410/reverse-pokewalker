@@ -43,7 +43,7 @@ void funcCommKeyex() {
       Serial.println(pwKey, HEX);
 
       delay(3); 
-      uint8_t packet[] = {0x20, 0x01, 0x00, 0x00, (pwKey >> 24) & 0xFF, (pwKey >> 16) & 0xFF, (pwKey >> 8) & 0xFF, pwKey & 0xFF};
+      uint8_t packet[] = {0x20, 0x01, 0x00, 0x00, (uint8_t)(pwKey >> 24), (uint8_t)(pwKey >> 16), (uint8_t)(pwKey >> 8), (uint8_t)pwKey};
       sendPacket(packet, sizeof(packet));
 
       setCommState(COMM_GDATA);
