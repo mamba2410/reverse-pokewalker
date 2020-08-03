@@ -35,12 +35,20 @@ Corresponding binary file in `dumps/bin/` and image file in `dumps/img/`.
 See `docs/` for more info.
 
 ## Next steps/To be done
+- Document more IR packets and observe the behaviour.
+- Listen and document on IR exchanges such as:
+	- Sending a Pokemon
+	- Receiving a Pokemon
+	- Receiving a Gift
+	- Pokewalker 'visits'
+	- Register Pokewalker
+	- Reset Pokewalker
+	- Note: Arduino is not fast enough to get all the data, logic analyser is needed.
 - Get a ROM dump of the internal 48K ROM which contains all the code.
 	- Decapping and looking at the MCU under a microscope might be the best approach.
 	- Worth looking into the TX/RX signals, it's likely just echoing from the IR but it might be able to be exploited to run arbitrary code if intercepted.
 	- Research on chip/code exploits to get a dump might be another option. "power glitch attack" was the recommended googling to learn more (thanks to `u/DarkJezter`)
 	- It's a long shot, but might be able to intercept the tx/rx signal and somehow get the MCU to write the 48K ROM contents to the external EEPROM.
-- Document more IR packets and observe the behaviour.
 - Might be able to write code to the internal ROM somehow.
 
 ----
