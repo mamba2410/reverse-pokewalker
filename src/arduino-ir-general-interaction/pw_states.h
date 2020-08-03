@@ -10,6 +10,8 @@ enum CommState {
   COMM_KEYEX,
   COMM_READY,
   COMM_GDATA,
+  COMM_ECHO,
+  COMM_TRESP,         // test response to pw packets
   COMM_STATE_COUNT,
 };
 
@@ -19,6 +21,10 @@ void funcCommIdle(void);
 void funcCommKeyex(void);
 void funcCommReady(void);
 void funcCommGetGData(void);
+void funcCommEcho(void);
+void funcCommTResp(void);
+
+void funcPostKeyex(void);
 
 void setCommState(CommState);
 void sendPacket(uint8_t, const size_t);

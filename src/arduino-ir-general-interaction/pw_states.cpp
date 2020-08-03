@@ -3,7 +3,7 @@
 #include "Arduino.h"
 #include "pokewalker.h"
 
-commFunc_t commFuncTable[] = {funcCommIdle, funcCommKeyex, funcCommReady, funcCommGetGData};
+commFunc_t commFuncTable[] = {funcCommIdle, funcCommKeyex, funcCommReady, funcCommGetGData, funcCommEcho, funcCommTResp};
 CommState currentState = COMM_IDLE;
 uint32_t pwKey = 0;
 
@@ -43,15 +43,72 @@ void funcCommKeyex() {
       Serial.println(pwKey, HEX);
 
       delay(3); 
-      uint8_t packet[] = {0x20, 0x01, 0x00, 0x00, (uint8_t)(pwKey >> 24), (uint8_t)(pwKey >> 16), (uint8_t)(pwKey >> 8), (uint8_t)pwKey};
-      sendPacket(packet, sizeof(packet));
+      funcPostKeyex();
 
-      setCommState(COMM_GDATA);
     } else
     {
       Serial.println("/!\\ During keyex: Wrong packet received");
       setCommState(COMM_IDLE);
+      return;
     }
+  }
+}
+
+/*
+ *  Code to be called directly after we receive a key
+ */
+void funcPostKeyex() {
+  // Send 0x20 - asking the pokewalker for general data
+  uint8_t packet[] = {0x20, 0x01, 0x00, 0x00, (uint8_t)(pwKey >> 24), (uint8_t)(pwKey >> 16), (uint8_t)(pwKey >> 8), (uint8_t)pwKey};
+  sendPacket(packet, sizeof(packet));
+
+  setCommState(COMM_GDATA);
+
+/*
+  PWGeneralData npacket = {
+    .header={0x60, 0x01,  0x00, 0x00, (uint8_t)(pwKey >> 24), (uint8_t)(pwKey >> 16), (uint8_t)(pwKey >> 8), (uint8_t)pwKey},
+    .unk1={0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x07, 0x00, 0x00, 0x07, 0x00},
+    .tid=31115,
+    .sid=9613,
+    .unk2={ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 },
+    .trainerName={0x2D, 0x01, 0x45, 0x01, 0x50, 0x01, 0x50, 0x01, 0x59, 0x01, 0x51, 0x01, 0xFF, 0xFF, 0x00, 0x00},
+    .unk3={0x00, 0x00, 0x00},
+    .pwStatus=0x00,
+    .unk4={0x00, 0x00, 0x00, 0x00},
+    .timeSince=618192000,
+    .totalStep=0
+  };
+  sendPacket((uint8_t*)&npacket, sizeof(npacket));
+  setCommState(COMM_ECHO);
+      
+*/
+}
+
+/*
+ *  Test code to respond to packet sent post-key exchange
+ */
+void funcCommTResp() {
+  if (rxCursor == 8) {
+    delay(3);
+    PWGeneralData packet = {
+        .header={0x64, 0x01,  0x00, 0x00, (uint8_t)(pwKey >> 24), (uint8_t)(pwKey >> 16), (uint8_t)(pwKey >> 8), (uint8_t)pwKey},
+        .unk1={0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x07, 0x00, 0x00, 0x07, 0x00},
+        .tid=31115,
+        .sid=9613,
+        .unk2={ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 },
+        .trainerName={0x2D, 0x01, 0x45, 0x01, 0x50, 0x01, 0x50, 0x01, 0x59, 0x01, 0x51, 0x01, 0xFF, 0xFF, 0x00, 0x00},
+        .unk3={0x00, 0x00, 0x00},
+        .pwStatus=0x00,
+        .unk4={0x00, 0x00, 0x00, 0x00},
+        .timeSince=618192000,
+        .totalStep=0
+      };
+      sendPacket((uint8_t*)&packet, sizeof(packet));
+      setCommState(COMM_ECHO);
   }
 }
 
@@ -68,8 +125,10 @@ void funcCommReady() {}
 void funcCommGetGData() {
   if (rxCursor == 112)
   {
+    printHex(parsePacket());
+
     PWGeneralData pwGeneralData;
-    memcpy(&pwGeneralData, rxBuffer, sizeof(PWGeneralData));
+    memcpy(&pwGeneralData, packetBuffer, sizeof(PWGeneralData));
     
     printGeneralData(pwGeneralData);
 
@@ -77,10 +136,6 @@ void funcCommGetGData() {
     printBytes(pwGeneralData.unk1, 12);
     Serial.print("\nunk2: ");
     printBytes(pwGeneralData.unk2, 56);
-    Serial.print("\nunk3: ");
-    printBytes(pwGeneralData.unk3, 3);
-    Serial.print("\nunk4: ");
-    printBytes(pwGeneralData.unk4, 8);
     Serial.println();
 
     setCommState(COMM_IDLE);
@@ -121,6 +176,47 @@ void printGeneralData(PWGeneralData pwGeneralData) {
     Serial.print("Total step count: ");
     Serial.println(((pwGeneralData.totalStep >> 24) & 0xFF) | ((pwGeneralData.totalStep << 8) & 0xFF0000) | ((pwGeneralData.totalStep >> 8) & 0xFF00) | ((pwGeneralData.totalStep << 24) & 0xFF000000));
     
+}
+
+/*
+ *  Echo Serial1 to Serial0
+ */
+void funcCommEcho() {
+  PacketError err = parsePacket();
+
+  switch (err) {
+    case PERR_OK:
+      Serial.print("OK: ");
+      printBytes(packetBuffer, packetLength);
+      break;
+
+    case PERR_SHORT:
+      break;
+
+    case PERR_SESSION:
+      Serial.print("Could not find valid session ID in buffer: ");
+      printBytes(rxBuffer, rxCursor);
+      Serial.println();
+      rxCursor = 0;
+      break;
+
+    case PERR_CHECKSUM:
+      Serial.print("Invalid checksum: ");
+      printBytes(rxBuffer, rxCursor);
+      Serial.println();
+      rxCursor = 0;
+      break;
+
+    default:
+      Serial.println("Unknown error");
+      break;
+  }
+  
+  if ( err != PERR_SHORT ) {
+    Serial.println();
+    rxCursor = 0;
+  }
+
 }
 
 /*

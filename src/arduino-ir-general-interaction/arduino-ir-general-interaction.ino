@@ -40,7 +40,7 @@ void loop() {
   } // End of Serial1.available()
 
   // Are we still active or expected to be idle?
-  if (millis() > lastRecv + 1000 && currentState != COMM_IDLE)
+  if (millis() > lastRecv + 1000 && currentState != COMM_IDLE && currentState != COMM_ECHO)
   {
     Serial.println("Timeout");
     setCommState(COMM_IDLE);
