@@ -1,8 +1,12 @@
 #include "pw_utils.h"
+#include "pw_states.h"
 #include "Arduino.h"
 
-uint8_t rxBuffer[128];
 size_t rxCursor = 0;
+size_t packetLength = 0;
+uint8_t rxBuffer[128];
+uint8_t packetBuffer[128];
+
 
 /*
  *  Send a packet to Serial1
@@ -62,6 +66,47 @@ uint16_t computeChecksum(const uint8_t packet[], const size_t packetSize) {
     checksum = ((checksum << 8) & 0xFF00) | ((checksum >> 8) & 0xFF);
 
     return checksum;
+}
+
+  // Check rx cursor > 7
+  // Check header
+  // Ignore bytes 1 and 2
+  // Ignore checksum (2/3) for now
+  // Check session ID
+  // Go back and check 
+PacketError parsePacket() {
+  uint32_t key;
+  size_t packetSize, i;
+  uint16_t checksum;
+  uint16_t oldChecksum;
+  if (rxCursor < 8) return PERR_SHORT;
+
+  for (i = 0; i < rxCursor-7; i++)
+  {
+    key = ((uint32_t)rxBuffer[i+4] << 24) | ((uint32_t)rxBuffer[i+5] << 16) | ((uint32_t)rxBuffer[i+6] << 8) | ((uint32_t)rxBuffer[i+7] << 0);
+    if (key == pwKey) goto validKey;
+  }
+  return PERR_SESSION;
+
+  validKey: 
+  packetSize = rxCursor - i;
+  oldChecksum = ((uint16_t)rxBuffer[i+2]<<8) | (uint16_t)rxBuffer[i+3]&0xFF;
+  rxBuffer[i+2] = 0x00;
+  rxBuffer[i+3] = 0x00;
+  checksum = computeChecksum( (rxBuffer+i), packetSize );
+  rxBuffer[i+2] = oldChecksum>>8;
+  rxBuffer[i+3] = oldChecksum&0xFF;
+
+  if ( checksum == oldChecksum  ) {
+
+    memcpy(packetBuffer, rxBuffer+i, packetSize);
+    packetLength = packetSize;
+    return PERR_OK;
+  } else {
+    return PERR_CHECKSUM;
+  }
+
+  return PERR_UNKNOWN;
 }
 
 /*
