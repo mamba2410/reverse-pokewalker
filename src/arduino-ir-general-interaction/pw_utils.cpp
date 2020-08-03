@@ -98,7 +98,6 @@ PacketError parsePacket() {
   rxBuffer[i+3] = oldChecksum&0xFF;
 
   if ( checksum == oldChecksum  ) {
-
     memcpy(packetBuffer, rxBuffer+i, packetSize);
     packetLength = packetSize;
     return PERR_OK;
