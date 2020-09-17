@@ -4,7 +4,7 @@
 #include "pokewalker.h"
 
 commFunc_t commFuncTable[] = {funcCommIdle, funcCommKeyex, funcCommReady, funcCommGetGData, funcCommEcho, funcCommTResp};
-CommState currentState = COMM_ECHO;
+CommState currentState = COMM_IDLE;
 uint32_t pwKey = 0;
 
 /*
@@ -68,7 +68,8 @@ void funcPostKeyex() {
 
   uint8_t packet[] = {0x0C, 0x01, 0x00, 0x00, (uint8_t)(pwKey >> 24), (uint8_t)(pwKey >> 16), (uint8_t)(pwKey >> 8), (uint8_t)pwKey, 0x02, 0xA0, 0x40};
   sendPacket(packet, sizeof(packet));
-  setCommState(COMM_ECHO);
+  setCommState(COMM_TRESP);
+  Serial.println("Packet sent, waiting for response");
 
 /*
   PWGeneralData npacket = {
@@ -96,8 +97,6 @@ void funcPostKeyex() {
  *  Test code to respond to packet sent post-key exchange
  */
 void funcCommTResp() {
-  if (rxCursor == 8) {
-    delay(3);
     PWGeneralData packet = {
       .header={0x64, 0x01,  0x00, 0x00, (uint8_t)(pwKey >> 24), (uint8_t)(pwKey >> 16), (uint8_t)(pwKey >> 8), (uint8_t)pwKey},
       .unk1={0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x07, 0x00, 0x00, 0x07, 0x00},
@@ -113,9 +112,26 @@ void funcCommTResp() {
       .timeSince=618192000,
       .totalStep=0
     };
+  if (rxCursor == 8) {
+    delay(3);
+
     sendPacket((uint8_t*)&packet, sizeof(packet));
     setCommState(COMM_ECHO);
   }
+
+
+/*
+  PWPkmnData pkmn = {
+    .pokemonID = 0xea, .heldItem = 0x00,
+    .moves = {0x0136, 0, 0, 0},
+    .tid = 31115, .sid=9613, .pid = 0,
+    .ivs = 0x3FFFFFFF, .evHP=4, .evAtk=0, .evDef=0, .evSpe=252, .evSpA=252, .evSpD=0,
+    .markings=0, .language=0, .ability=0, .happiness=255, .level=100, .padding=0,
+    .nickname={0x2D, 0x01, 0x45, 0x01, 0x50, 0x01, 0x50, 0x01, 0x59, 0x01, 0x51, 0x01, 0x51, 0x01, 0xFF, 0xFF, 0x00, 0x00}
+  };
+  printPkmnData(pkmn);
+*/
+  
 }
 
 
@@ -231,4 +247,3 @@ void setCommState(const CommState newState) {
   currentState = newState;
   rxCursor = 0;
 }
-

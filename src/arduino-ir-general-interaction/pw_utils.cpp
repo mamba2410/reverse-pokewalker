@@ -45,6 +45,54 @@ void printPacket(size_t nBytes) {
   Serial.write('\n');
 }
 
+
+/*
+ *  Print the Pokemon data in a nice format
+ */
+void printPkmnData(struct PWPkmnData data) {
+    Serial.print("Pokemon ID: "); printHex(data.pokemonID);
+    Serial.print("\nHeld item: "); printHex(data.heldItem);
+    Serial.print("\nMoves: ");
+    for (uint8_t i = 0; i < 4; i++) { printHex(data.moves[i]); Serial.print(" "); }
+    Serial.print("\nTID: "); Serial.print(data.tid);
+    Serial.print("\nSID: "); Serial.print(data.sid);
+    Serial.print("\nPID: "); printHex(data.pid);
+    Serial.print("\nIVs: ");
+    Serial.print("\n\tHP : "); Serial.print(getIV(data, 0));
+    Serial.print("\n\tAtk: "); Serial.print(getIV(data, 0));
+    Serial.print("\n\tDef: "); Serial.print(getIV(data, 0));
+    Serial.print("\n\tSpe: "); Serial.print(getIV(data, 0));
+    Serial.print("\n\tSpA: "); Serial.print(getIV(data, 0));
+    Serial.print("\n\tSpD: "); Serial.print(getIV(data, 0));
+    Serial.print("\nEVs: ");
+    Serial.print("\n\tHP : "); Serial.print(data.evHP);
+    Serial.print("\n\tAtk: "); Serial.print(data.evAtk);
+    Serial.print("\n\tDef: "); Serial.print(data.evDef);
+    Serial.print("\n\tSpe: "); Serial.print(data.evSpe);
+    Serial.print("\n\tSpA: "); Serial.print(data.evSpA);
+    Serial.print("\n\tSpD: "); Serial.print(data.evSpD);
+    Serial.print("\nMarkings: "); printHex(data.markings);
+    Serial.print("\nLanguage: "); printHex(data.language);
+    Serial.print("\nAbility: "); Serial.print(data.ability);
+    Serial.print("\nHappiness: "); Serial.print(data.happiness);
+    Serial.print("\nLevel: "); Serial.print(data.level);
+    
+    char buf[10];
+    Serial.print("\nNickname: ");
+    parseAscii(buf, data.nickname, 10);
+    Serial.println(buf);
+}
+
+
+/*
+ *  Get the IVs from a Pokemon data struct
+ */
+uint8_t getIV(struct PWPkmnData data, uint8_t idx) {
+    const uint8_t sz = 5;
+    const uint8_t mask = (1<<sz) - 1;
+    return data.ivs & ( mask<<(sz*idx) );
+}
+
 /*
  *  Compute the checksum for the packet
  */
@@ -66,6 +114,24 @@ uint16_t computeChecksum(const uint8_t packet[], const size_t packetSize) {
     checksum = ((checksum << 8) & 0xFF00) | ((checksum >> 8) & 0xFF);
 
     return checksum;
+}
+
+
+/*
+ *  Implementation of the CR16-CCITT algorithm
+ *  adapted from https://stackoverflow.com/questions/17196743/crc-ccitt-implementation
+ */
+uint16_t crc16_ccitt(uint8_t packet[], size_t packetSize) {
+    uint16_t crc = 0;
+    while(packetSize >0) {
+      packetSize--;
+      crc ^= (uint16_t) *packet++ << 8;
+      for(size_t i = 7; i; i--) {
+        if(crc & 0x8000)  crc = crc << 1 ^ 0x1021;
+        else              crc = crc << 1;
+      }
+    }
+    return crc;
 }
 
   // Check rx cursor > 7
