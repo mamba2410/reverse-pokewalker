@@ -16,7 +16,7 @@ It is part of every communication, and helps verify the PokeWalker against the c
 | 0x08   | 12     | _Needs documentation (Trainer data?)_           |
 | 0x14   | 2      | Trainer ID                                      |
 | 0x16   | 2      | Secret ID                                       |
-| 0x18   | 56     | _Needs documentation (Unique data to each PW?)_ |
+| 0x18   | 56     | _Unknown, unique data to each PW_               |
 | 0x50   | 16     | Trainer Name (Terminated by 0xFFFF)             |
 | 0x60   | 3      | Unknown (Always 0x00)                           |
 | 0x63   | 1      | PokeWalker Status (See below)                   |

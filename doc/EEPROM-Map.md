@@ -12,22 +12,24 @@ This region contains general data about the pokewalker, a lot of it is what is r
 The region is 256 bytes and is stored twice, presumably to make sure the data isn't corrupt.
 | Address | Length | Description                       |
 |---------|--------|-----------------------------------|
-| 0x0080  | 3      | _Unknown (always ``0x01``?)_      |
+| 0x0080  | 3      | _Unknown (unique to each PW?)_    |
 | 0x0083  | 56     | Same as ``0x00FD``                |
-| 0x00AB  | 44     | _Unknown, same on two walkers_    |
+| 0x00AB  | 44     | _Unknown, universally constant_   |
 | 0x00D7  | 18     | _Unknown (always ``0xFE``?)_      |
-| 0x00EC  | 4      | _Unknown, ``0xBF01`` on two walkers_ |
+| 0x00EC  | 2      | _Unknown, ``0xBF01`` on two walkers, ``0xBF00`` when not initialised_ |
+| 0x00EE  | 2      | Unknown, always ``0x00``?         |
 | 0x00F0  | 12     | _Unknown, trainer flags/data?_ Start of ``PWGeneralData`` struct |
 | 0x00F9  | 2      | Trainer TID                       |
 | 0x00FB  | 2      | Trainer SID                       |
-| 0x00FD  | 56     | _Unknown, Unique data?_           |
+| 0x00FD  | 56     | _Unknown, unique to each PW_      |
 | 0x0135  | 16     | Trainer name                      |
 | 0x0145  | 3      | Unknown (always ``0x00``?)        |
 | 0x0148  | 1      | Pokewalker status flags           |
-| 0x0149  | 4      | Unknown (always ``0x02``?)        |
+| 0x0149  | 4      | _Unknown (always ``0x02``?)_      |
 | 0x014D  | 4      | Unknown (always ``0x00``)         |
 | 0x0151  | 4      | Always ``0x00`` (total steps). End of ``PWGeneralData`` struct |
-| 0x0155  | 13     | _Unknown, needs documentation_    |
+| 0x0155  | 9      | _Unknown, needs documentation_    |
+| 0x015E  | 4      | Time of last synchronisation      |
 | 0x0162  | 2      | Total days                        |
 | 0x0164  | 2      | Current watts                     |
 | 0x0166  | 7      | _Unknown, needs documentation_    |
@@ -43,11 +45,6 @@ Settings bits:
 | 6:3  | Shade setting `0b0000`-`0b1001` |
 | 2:1  | Sound setting `0b00`-`0b11`     |
 | 0    | Unknown, `0b0`                  |
-
-Things missing:
-- Current route
-- Current pokemon
-- Current items
 
 
 ## 0x0280 - 0x041F: Numerical characters
