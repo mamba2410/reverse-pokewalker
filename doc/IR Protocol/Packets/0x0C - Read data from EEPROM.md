@@ -8,6 +8,7 @@
 This packet asks the PokeWalker to read data from its external EEPROM, and to send it in [Packet 0x0E - Data read from EEPROM](0x0E%20-%20Data%20read%20from%20EEPROM.md).
 
 The address to read from in the EEPROM, as well as how many byte must be read, is configurable in this packet payload.
+Note: The address is big-endian. 
 
 ## Description
 | Offset | Length | Description |

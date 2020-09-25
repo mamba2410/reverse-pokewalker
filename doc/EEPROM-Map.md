@@ -4,8 +4,51 @@ This document provides the currently known regions of the EEPROM.
 ## 0x0000 - 0x0007: Magic number
 The content of this region is always set to the ASCII string ``nintendo``.
 
-## 0x0008 - 0x027F: Unknown
-This region is not yet documented.
+## 0x0008 - 0x007F: Unknown
+Content is unknown, seems to be mostly ``0xFF``.
+
+## 0x0080 - 0x027F: Pokewalker general data
+This region contains general data about the pokewalker, a lot of it is what is returned by the `0x22` IR packet.
+The region is 256 bytes and is stored twice, presumably to make sure the data isn't corrupt.
+| Address | Length | Description                       |
+|---------|--------|-----------------------------------|
+| 0x0080  | 3      | _Unknown (always ``0x01``?)_      |
+| 0x0083  | 56     | Same as ``0x00FD``                |
+| 0x00AB  | 44     | _Unknown, same on two walkers_    |
+| 0x00D7  | 18     | _Unknown (always ``0xFE``?)_      |
+| 0x00EC  | 4      | _Unknown, ``0xBF01`` on two walkers_ |
+| 0x00F0  | 12     | _Unknown, trainer flags/data?_ Start of ``PWGeneralData`` struct |
+| 0x00F9  | 2      | Trainer TID                       |
+| 0x00FB  | 2      | Trainer SID                       |
+| 0x00FD  | 56     | _Unknown, Unique data?_           |
+| 0x0135  | 16     | Trainer name                      |
+| 0x0145  | 3      | Unknown (always ``0x00``?)        |
+| 0x0148  | 1      | Pokewalker status flags           |
+| 0x0149  | 4      | Unknown (always ``0x02``?)        |
+| 0x014D  | 4      | Unknown (always ``0x00``)         |
+| 0x0151  | 4      | Always ``0x00`` (total steps). End of ``PWGeneralData`` struct |
+| 0x0155  | 13     | _Unknown, needs documentation_    |
+| 0x0162  | 2      | Total days                        |
+| 0x0164  | 2      | Current watts                     |
+| 0x0166  | 7      | _Unknown, needs documentation_    |
+| 0x016D  | 1      | Settings (see below)              |
+| 0x016E  | 3      | _Unknown, needs documentation_    |
+| 0x0171  | 15     | Padding, (always ``0xFF``?)       |
+| 0x0180  | 256    | Exact copy of ``0x0080``-`0x017F` |
+
+Settings bits:
+| Bits | Description                     |
+|------|---------------------------------|
+| 7    | Unknown, `0b0`                  |
+| 6:3  | Shade setting `0b0000`-`0b1001` |
+| 2:1  | Sound setting `0b00`-`0b11`     |
+| 0    | Unknown, `0b0`                  |
+
+Things missing:
+- Current route
+- Current pokemon
+- Current items
+
 
 ## 0x0280 - 0x041F: Numerical characters
 This region contains graphics for numerical/mathematical characters.
