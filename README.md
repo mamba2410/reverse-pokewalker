@@ -4,6 +4,11 @@
 <img src="./pics/logo.png" width="128" >
 </div>
 
+**This project (and wiki) has been superceded by [this article](http://dmitry.gr/?r=05.Projects&proj=28.%20pokewalker) by Dmitry.GR.**
+**This repo may be updated from time-to-time as my own personal leraning experience.**
+**Huge thanks again to Dmitry who cracked it all on his own - and thanks to the contributors to this repo.**
+
+
 This project is about reverse engineering the PokeWalker, a device designed for use with the Pokemon HeartGold and SoulSilver games.
 
 The end goal is to hopefully be able to have the foundations to emulate its behaviour, such as:
