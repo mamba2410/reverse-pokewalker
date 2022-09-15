@@ -24,9 +24,9 @@ Join the [Discord server](https://discord.gg/ymbTMsS) for more discussion on the
 
 ## Related projects
 
-- [Pokewalker emulator by UnrealPowerz)[https://github.com/UnrealPowerz/powar]
+- [Pokewalker emulator by UnrealPowerz](https://github.com/UnrealPowerz/powar)
 - [NDS Pokewalker ROM dumper by PoroCYon](https://git.titandemo.org/PoroCYon/pokewalker-rom-dumper)
-- [Pokewalker recreation project by mamba2410)https://github.com/mamba2410/pw-lcd]
+- [Pokewalker recreation project by mamba2410](https://github.com/mamba2410/pw-lcd)
 
 ----
 
