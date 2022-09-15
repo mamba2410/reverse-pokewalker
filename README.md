@@ -5,51 +5,28 @@
 </div>
 
 **This project (and wiki) has been superceded by [this article](http://dmitry.gr/?r=05.Projects&proj=28.%20pokewalker) by Dmitry.GR.**
-**This repo may be updated from time-to-time as my own personal leraning experience.**
+**This repo has been shelved since the goal it was aiming for has been acheived. See below for active related projects.**
 **Huge thanks again to Dmitry who cracked it all on his own - and thanks to the contributors to this repo.**
 
+----
 
 This project is about reverse engineering the PokeWalker, a device designed for use with the Pokemon HeartGold and SoulSilver games.
 
-The end goal is to hopefully be able to have the foundations to emulate its behaviour, such as:
-- With a phone app that communicates to the walker/game through IR
-- A full emulator to run the pokewalker software on.
-- Custom hardware that emulates the pokewalker with extra features. (eg. on a Raspberry Pi/Arduino)
-
 Join the [Discord server](https://discord.gg/ymbTMsS) for more discussion on the topic.
 
-Documentation/findings can be found in the `docs/` directory of this repo.
-Dumps can be found in the `dumps/` directory.
-The dumps can be read as a binary file (.bin), a hex file (.txt) or as an image (.png).
-The images look best at the 16-pixel width.
-
-The hex for the 64K ROM is in `dumps/hex/64k-full-rom.txt`.
-Corresponding binary file in `dumps/bin/` and image file in `dumps/img/`.
 
 ----
 
 ## What's Known
-- The main MCU is a Renesas H8/38606F chip with 48K flash ROM and 2K RAM.
-- The code is stored in the internal 48K MCU flash.
-- Most of the images are stored on the external 64K eeprom.
-- Most text is stored as an image file on 64k ROM, except dynamic data like response text.
-- Most images are stored as two 1-bit images. Apparently the same system as the Gameboy 2bpp sprite rendering.
-- The IR protocol is a slightly modified version of IrDA-SIR. Packet structure is being worked on.
-- The algorithm for the IR packet checksum is known.
 
-See `docs/` for more info.
+- We have a full ROM dump of both the internal 48k and external 64k roms courtesy of [this article](http://dmitry.gr/?r=05.Projects&proj=28.%20pokewalker)
 
-## Next steps/To be done
-- Document more IR packets and observe the behaviour.
-- Listen and document on IR exchanges such as:
-	- Sending a Pokemon
-	- Receiving a Pokemon
-	- Receiving a Gift
-	- Pokewalker 'visits'
-	- Register Pokewalker
-	- Reset Pokewalker
-	- Note: Arduino is not fast enough to get all the data, logic analyser is needed.
-- Get a ROM dump of the internal 48K ROM which contains all the code.
+
+## Related projects
+
+- [Pokewalker emulator by UnrealPowerz)[https://github.com/UnrealPowerz/powar]
+- [NDS Pokewalker ROM dumper by PoroCYon](https://git.titandemo.org/PoroCYon/pokewalker-rom-dumper)
+- [Pokewalker recreation project by mamba2410)https://github.com/mamba2410/pw-lcd]
 
 ----
 
